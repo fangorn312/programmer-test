@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.geektest2.LevelsFragment">
+
+
+    <TextView
+        android:id="@+id/select_lvl_textview"
+        android:layout_gravity="center"
+        android:text="@string/choice_diff_txtview"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/easy_radio_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/easy_lvl_radiobtn" />
+
+        <RadioButton
+            android:id="@+id/medium_radio_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/med_lvl_radiobtn" />
+
+        <RadioButton
+            android:id="@+id/hard_radio_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hard_lvl_radiobtn" />
+
+    </RadioGroup>
+
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/start_test_button"
+        android:text="@string/start_test_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -1,0 +1,128 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.geektest2.ResultFragment">
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/result_text_view"
+        android:textSize="30sp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/res_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name:"
+            android:layout_marginLeft="16dp"
+            android:textSize="25sp"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/res_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/res_name"
+            android:layout_marginLeft="35dp"
+            android:textSize="15sp"
+            android:layout_marginStart="35dp"
+            android:layout_toEndOf="@id/res_name" />
+
+        <TextView
+            android:id="@+id/res_univ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Universe:"
+            android:layout_alignLeft="@id/res_name"
+            android:layout_below="@id/res_name"
+            android:textSize="25sp"
+            android:layout_alignStart="@id/res_name" />
+
+        <TextView
+            android:id="@+id/res_univ_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/res_name_text"
+            android:layout_alignBaseline="@id/res_univ"
+            android:textSize="15sp"
+            android:layout_alignStart="@id/res_name_text" />
+
+        <TextView
+            android:id="@+id/res_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/res_univ"
+            android:text="Level:"
+            android:textSize="25sp"
+            android:layout_below="@id/res_univ"
+            android:layout_alignStart="@id/res_univ" />
+
+        <TextView
+            android:id="@+id/res_level_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_alignLeft="@id/res_univ_text"
+            android:layout_alignBaseline="@id/res_level"
+            android:layout_alignStart="@id/res_univ_text" />
+
+        <TextView
+            android:id="@+id/res_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total"
+            android:textSize="25sp"
+            android:layout_alignLeft="@id/res_level"
+            android:layout_below="@id/res_level"
+            android:layout_alignStart="@id/res_level" />
+
+        <TextView
+            android:id="@+id/res_total_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_alignLeft="@id/res_level_text"
+            android:layout_alignBaseline="@id/res_total"
+            android:layout_alignStart="@id/res_level_text" />
+
+        <TextView
+            android:id="@+id/res_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Correct"
+            android:textSize="25sp"
+            android:layout_alignLeft="@id/res_total"
+            android:layout_below="@id/res_total"
+            android:layout_alignStart="@id/res_total" />
+
+        <TextView
+            android:id="@+id/res_correct_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_alignLeft="@id/res_total_text"
+            android:layout_alignBaseline="@id/res_correct"
+            android:layout_alignStart="@id/res_total_text" />
+
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/res_ok_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

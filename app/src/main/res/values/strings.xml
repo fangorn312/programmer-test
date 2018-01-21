@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">GeekTest2</string>
+
+    <string name="lotr_btn">Властелин Колец</string>
+    <string name="potter_btn">Harry Potter</string>
+    <string name="dota_btn">DOTA</string>
+    <string name="marvel_btn">Marvel</string>
+    <string name="dc_btn">Detective Comics</string>
+    <string name="random_select_btn">Random Select</string>
+    <string name="name_text_view">Name</string>
+    <string name="login_btn">Login</string>
+    <string name="welcome_text_view">Welcome</string>
+    <string name="univ_select_txtview">Выбор вселенной</string>
+    <string name="stats_text_view">Просмотр статистики</string>
+    <string name="back_btn">Back</string>
+    <string name="choice_diff_txtview">Выберите сложность</string>
+    <string name="easy_lvl_radiobtn">Easy</string>
+    <string name="med_lvl_radiobtn">Medium</string>
+    <string name="hard_lvl_radiobtn">Hard</string>
+    <string name="start_test_btn">Начать тестирование</string>
+    <string name="input_name_textview">Введите имя</string>
+    <string name="name_hint">Name</string>
+    <string name="next_button_view">Next</string>
+    <string name="question_text">Question</string>
+    <string name="choice_1">1</string>
+    <string name="choice_2">2</string>
+    <string name="choice_3">3</string>
+    <string name="choice_4">4</string>
+    <string name="result_text_view">Результат</string>
+</resources>
