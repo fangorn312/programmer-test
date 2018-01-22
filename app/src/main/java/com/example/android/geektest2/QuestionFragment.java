@@ -28,6 +28,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -40,10 +41,14 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
         // Required empty public constructor
     }
 
+    //Tag for Bundle
     public static final String TAG_SCORE = "TAG_SCORE";
     public static final String TAG_QUANTITY = "TAG_QUANTITY";
     public static final String TAG_UNIVERSE = "TAG_UNIVERSE";
     public static final String TAG_LEVEL = "TAG_LEVEL";
+    //values from Bundle
+    int receiveInfoUniv;
+    int receiveInfoLvl;
 
     private QuestionBank mQuestionLibrary = new QuestionBank();
     private TextView mQuestionText;
@@ -60,9 +65,6 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
     RadioButton choice1, choice2, choice3, choice4;
     List<Integer> choices;
 
-    int receiveInfoUniv;
-    int receiveInfoLvl;
-
     CountDownTimer start;
 
     ProgressBar progressBar;
@@ -75,15 +77,18 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_question, container, false);
 
+        //Получить данные из других фрагментов
         Bundle bundle = getArguments();
         if (bundle != null) {
             receiveInfoUniv = bundle.getInt(LevelsFragment.TAG_SELECTED_UNIV);
             receiveInfoLvl = bundle.getInt(LevelsFragment.TAG_SELECTED_LVL);
+
+            //Random Button
+            Random random = new Random(System.currentTimeMillis());
+            if (receiveInfoUniv==6) receiveInfoUniv = random.nextInt(5) + 1;
             Log.d("MYTAG", "Accepted " + receiveInfoUniv + " " + receiveInfoLvl);
         }
 
-        //mChronometer = view.findViewById(R.id.ques_chronometer);
-        //mChronometer.start();
         progressBar = view.findViewById(R.id.progressBar);
         progressTimer = view.findViewById(R.id.timer_text_view);
         progressBar.setMax(8);
@@ -104,6 +109,7 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
         choice3 = view.findViewById(R.id.radioBtn3);
         choice4 = view.findViewById(R.id.radioBtn4);
 
+        //4 варианта ответа. Далее choices.shuffle()
         choices = new ArrayList<>();
         choices.add(1);
         choices.add(2);
@@ -118,9 +124,9 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
             @Override
             public void onClick(View v) {
 
-
                 int id= mRadioGroup.getCheckedRadioButtonId();
 
+                //Если выбран хоть 1 RadioButton
                 if (id != -1) {
 
                     View radioButton = mRadioGroup.findViewById(id);
@@ -149,7 +155,7 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
 
 
     private void startTimer(){
-        ;
+
         start = new CountDownTimer(10000, 1000) {
             int i=0;
             @SuppressLint("SetTextI18n")
@@ -192,30 +198,39 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
 
             mQuestionNumber++;
         } else {
-            stopTimer();
-            //mChronometer.stop();
-            ResultFragment resultFragment = new ResultFragment();
-
-            Bundle bundle = new Bundle();
-            bundle.putInt(TAG_SCORE, mScore);
-            bundle.putInt(TAG_QUANTITY, mQuestionNumber);
-            bundle.putString(TAG_UNIVERSE, mUniverse);
-            bundle.putInt(TAG_LEVEL, receiveInfoLvl);
-
-            resultFragment.setArguments(bundle);
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragment_container,  resultFragment).commit();
+            stopFragment();
+//            stopTimer();
+//            //mChronometer.stop();
+//            ResultFragment resultFragment = new ResultFragment();
+//
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(TAG_SCORE, mScore);
+//            bundle.putInt(TAG_QUANTITY, mQuestionNumber);
+//            bundle.putString(TAG_UNIVERSE, mUniverse);
+//            bundle.putInt(TAG_LEVEL, receiveInfoLvl);
+//
+//            resultFragment.setArguments(bundle);
+//            FragmentManager fragmentManager = getFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.fragment_container,  resultFragment).commit();
 
         }
 
 
     }
 
-    private void restartProgress(){
+    private void stopFragment(){
+        stopTimer();
+        ResultFragment resultFragment = new ResultFragment();
 
-        progressBar.setVisibility(View.VISIBLE);
-        progressBar.setProgress(0);
-        //mt.execute(10);
+        Bundle bundle = new Bundle();
+        bundle.putInt(TAG_SCORE, mScore);
+        bundle.putInt(TAG_QUANTITY, mQuestionNumber);
+        bundle.putString(TAG_UNIVERSE, mUniverse);
+        bundle.putInt(TAG_LEVEL, receiveInfoLvl);
+
+        resultFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,  resultFragment).commit();
     }
 
 
@@ -228,12 +243,13 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
         builder.setCancelable(false);
         builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, new ResultFragment());
-                ft.commit();
+                stopFragment();
+//                stopTimer();
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                ft.replace(R.id.fragment_container, new ResultFragment());
+//                ft.commit();
             }
-        });
-        builder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Нет", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }

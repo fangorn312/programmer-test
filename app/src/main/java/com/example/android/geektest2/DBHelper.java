@@ -24,14 +24,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private int level, univ_id;
 
-
+    @SuppressLint("SdCardPath")
     public DBHelper(Context context, int level, int univ_id) {
         //super(context, DB_NAME, null, 1);
         //this.fContext = context;
         super(context, DB_NAME, null, 1);
-
-        Random random = new Random(System.currentTimeMillis());
-        if (univ_id==6) univ_id = random.nextInt(5) + 1;
 
         this.level = level;
         this.univ_id = univ_id;
@@ -40,6 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
 
     }
+
 
     public void createDataBase() throws IOException {
         boolean dbExist = checkDataBase();
@@ -120,8 +118,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (curs_ques.moveToFirst()) {
             do {
-
-
                 Question question = new Question();
 
                 //String univText = curs_univ.getString(curs_univ.getColumnIndex("name"));

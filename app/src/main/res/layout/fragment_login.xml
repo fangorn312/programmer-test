@@ -7,26 +7,26 @@
     tools:context="com.example.android.geektest2.LoginFragment">
 
     <TextView
-        android:text="@string/input_name_textview"
-        android:textSize="25sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/input_name_textview"
+        android:textSize="25sp" />
 
 
     <EditText
         android:id="@+id/editText"
-        android:hint="@string/name_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/name_hint"
         android:inputType="textPersonName"
         android:maxLength="20"
-        android:maxLines="1"/>
+        android:maxLines="1" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
         android:ems="10"
+        android:hint="Password"
         android:inputType="textPassword" />
 
     <Button
@@ -36,5 +36,24 @@
         android:layout_marginTop="10dp"
         android:text="@string/login_btn" />
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/createAcc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Если у Вас нет учетной записи, то " />
+
+        <TextView
+            android:id="@+id/createAcc_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/createAcc_link_btn"
+            android:layout_centerHorizontal="true"
+            android:textColor="#0000FF"
+            android:layout_below="@id/createAcc_text"/>
+    </RelativeLayout>
 
 </LinearLayout>

@@ -27,4 +27,8 @@
     <string name="choice_3">3</string>
     <string name="choice_4">4</string>
     <string name="result_text_view">Результат</string>
+    <string name="createAcc_link_btn"><u>создайте её</u></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
