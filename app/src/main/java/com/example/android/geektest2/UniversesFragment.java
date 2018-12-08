@@ -1,25 +1,29 @@
 package com.example.android.geektest2;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UniversesFragment extends Fragment implements OnBackPressedListener {
 
-    /*private static Logic instance;
-
-    public static Logic instance(){
-        if(instance==null){
-            instance=new Logic();
-        }
-        return instance;
-    }*/
+    ArrayList<Universe> mUniverses = new ArrayList<>();
+    ArrayList<Button> universeButtons=new ArrayList<>();
+    DBHelper mDBHelper;
+    LinearLayout containerUniverse;
 
     public static final String TAG_SELECTED_UNIV = "TAG_SELECTED_UNIV";
 
@@ -30,53 +34,68 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
                              Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_universes, container, false);
 
-        Button btnLOTR = (Button) view.findViewById(R.id.lotr_btn);
-        Button btnPotter =(Button) view.findViewById(R.id.potter_btn);
-        Button btnDota = (Button) view.findViewById(R.id.dota_btn);
-        Button btnMarvel=(Button) view.findViewById(R.id.marvel_btn);
-        Button btnDC = (Button) view.findViewById(R.id.dc_btn);
-        Button btnRandom = (Button) view.findViewById(R.id.random_btn);
+        containerUniverse = view.findViewById(R.id.container_universe);
+
+        mDBHelper = new DBHelper(getActivity());
+        try {
+            mDBHelper.createDataBase();
+            mDBHelper.openDataBase();
+            mUniverses = mDBHelper.getAllUniverseList();
+            mDBHelper.close();
+
+        } catch (IOException e) {
+            TextView errorInfo = new TextView(getActivity());
+            errorInfo.setText("Ошибка базы данных");
+            errorInfo.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            errorInfo.setLayoutParams(lp);
+            containerUniverse.addView(errorInfo);
+            e.printStackTrace();
+            return view;
+        }
+
+        for(Universe u: mUniverses){
+            Button btn = new Button(getActivity());
+            btn.setText(u.getUniverse());
+            btn.setId(u.getID());
+            btn.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            btn.setLayoutParams(lp);
+            universeButtons.add(btn);
+            containerUniverse.addView(btn);
+        }
+
+//        Button btnLOTR = (Button) view.findViewById(R.id.lotr_btn);
+//        Button btnPotter =(Button) view.findViewById(R.id.potter_btn);
+//        Button btnDota = (Button) view.findViewById(R.id.dota_btn);
+//        Button btnMarvel=(Button) view.findViewById(R.id.marvel_btn);
+//        Button btnDC = (Button) view.findViewById(R.id.dc_btn);
+//        Button btnRandom = (Button) view.findViewById(R.id.random_btn);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.lotr_btn:
-                        //instance.showLevelsFragment();
-                        onLevelsFragment(1);
+                for(Universe u: mUniverses){
+                    if (view.getId()==u.getID()){
+                        onLevelsFragment(u.getID());
                         break;
-                    case R.id.potter_btn:
-                        //instance.showLevelsFragment();
-                        onLevelsFragment(2);
-                        break;
-                    case R.id.dota_btn:
-                        //instance.showLevelsFragment();
-                        onLevelsFragment(3);
-                        break;
-                    case R.id.marvel_btn:
-                        //instance.showLevelsFragment();
-                        onLevelsFragment(4);
-                        break;
-                    case R.id.dc_btn:
-                        //instance.showLevelsFragment();
-                        onLevelsFragment(5);
-                        break;
-                    case R.id.random_btn:
-                        //instance.showLevelsFragment();
-                        onLevelsFragment(6);
-                        break;
+                    }
                 }
             }
         };
 
+        for(Button u: universeButtons){
+            u.setOnClickListener(onClickListener);
+        }
+
         //назначить обработчик на кнопки
-        btnLOTR.setOnClickListener(onClickListener);
-        btnDC.setOnClickListener(onClickListener);
-        btnDota.setOnClickListener(onClickListener);
-        btnMarvel.setOnClickListener(onClickListener);
-        btnPotter.setOnClickListener(onClickListener);
-        btnRandom.setOnClickListener(onClickListener);
+//        btnLOTR.setOnClickListener(onClickListener);
+//        btnDC.setOnClickListener(onClickListener);
+//        btnDota.setOnClickListener(onClickListener);
+//        btnMarvel.setOnClickListener(onClickListener);
+//        btnPotter.setOnClickListener(onClickListener);
+//        btnRandom.setOnClickListener(onClickListener);
 
         return view;
     }
@@ -85,16 +104,15 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
 
         //Смена фрагмента один на другой
 
-        LevelsFragment lvlFrag = new LevelsFragment();
-        //QuestionFragment quesFrag = new QuestionFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(TAG_SELECTED_UNIV, univ_id);
-        lvlFrag.setArguments(bundle);
+        CategoryFragment lvlFrag = new CategoryFragment();
+        QuizInfo qi = QuizInfo.instance();
+        qi.UniverseId = univ_id;
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container,  lvlFrag).addToBackStack(null).commit();
         /*
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new LevelsFragment(), LEVELS);
+        ft.replace(R.id.fragment_container, new CategoryFragment(), LEVELS);
         ft.addToBackStack(null);
         ft.commit();
 */
@@ -102,8 +120,6 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
 
     @Override
     public void onBackPressed() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new MenuFragment());
-        ft.commit();
+        MainActivity.instance().changeView(VPIds.MENU);
     }
 }

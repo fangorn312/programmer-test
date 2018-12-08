@@ -16,8 +16,6 @@ import android.widget.Button;
  */
 public class MenuFragment extends Fragment implements View.OnClickListener, OnBackPressedListener {
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,17 +33,19 @@ public class MenuFragment extends Fragment implements View.OnClickListener, OnBa
 
     @Override
     public void onClick(View view) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
         switch (view.getId()) {
             case R.id.select_univ_btn_view:
-                ft.replace(R.id.fragment_container, new UniversesFragment());
+                MainActivity.instance().changeView(VPIds.UNIVERSE);
+//                ft.replace(R.id.fragment_container, new UniversesFragment());
                 break;
             case R.id.stats_btn:
-                ft.replace(R.id.fragment_container, new StatisticsFragment());
-                ft.addToBackStack(null);
+
+//                ft.replace(R.id.fragment_container, new StatisticsFragment());
+//                ft.addToBackStack(null);
                 break;
         }
-        ft.commit();
+//        ft.commit();
     }
 
     @Override
@@ -57,7 +57,8 @@ public class MenuFragment extends Fragment implements View.OnClickListener, OnBa
         builder.setCancelable(false);
         builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                getActivity().finish();
+                MainActivity.instance().finish();
+//                getActivity().finish();
             }
         });
         builder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {

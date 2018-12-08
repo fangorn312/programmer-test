@@ -2,39 +2,57 @@ package com.example.android.geektest2;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static String DB_PATH;// = "/data/data/com.example.geektest2/databases/";
+
+
+    private static String DB_PATH;
     private static String DB_NAME = "myDB.sqlite";
     private SQLiteDatabase dataBase;
     private final Context fContext;
 
-    private int level, univ_id;
+
+    private long lastModified;
+    public static final int DB_VERSION = 5;
+    public static final boolean isChanged = false;
+
+    private String category;
+    private int univ_id;
+
+    public DBHelper(Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+        fContext = context;
+        DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+        loadFromCache();
+
+    }
 
     @SuppressLint("SdCardPath")
-    public DBHelper(Context context, int level, int univ_id) {
-        //super(context, DB_NAME, null, 1);
-        //this.fContext = context;
-        super(context, DB_NAME, null, 1);
+    public DBHelper(Context context, String category, int univ_id) {
+        super(context, DB_NAME, null, DB_VERSION);
 
-        this.level = level;
+        this.category = category;
         this.univ_id = univ_id;
 
         fContext = context;
         DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+        loadFromCache();
 
     }
 
@@ -54,17 +72,24 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
+        boolean checkDB = false;
         try {
             String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            File dbFile = new File(myPath);
+            checkDB = dbFile.exists();
+            long lm = dbFile.lastModified();
+            if (lm != lastModified) {
+                lastModified = lm;
+                checkDB = false;
+                putToCache();
+            }
+//            lastModified = dbFile.lastModified();
         } catch (SQLiteException e) {
+            Log.d("TEST_TAG", "База отсутствует");
+            e.printStackTrace();
             //файл базы данных отсутствует
         }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-        return checkDB != null;
+        return checkDB;
     }
 
     private void copyDataBase() throws IOException {
@@ -81,7 +106,7 @@ public class DBHelper extends SQLiteOpenHelper {
         input.close();
     }
 
-    public void openDataBase() throws SQLException {
+    public void openDataBase() throws SQLException, IOException {
         String path = DB_PATH + DB_NAME;
         dataBase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
     }
@@ -93,26 +118,93 @@ public class DBHelper extends SQLiteOpenHelper {
         super.close();
     }
 
+    public ArrayList<String[]> getDbTableDetails() {
+        //SQLiteDatabase db = this.getReadableDatabase();
+        dataBase = this.getReadableDatabase();
+        Cursor c = dataBase.rawQuery(
+                "SELECT name FROM sqlite_master WHERE type='table'", null);
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        int i = 0;
+        result.add(c.getColumnNames());
+        for (i = 0; i < c.getColumnNames().length; i++)
+            Log.d("TAG_COLUMNS", "" + c.getColumnNames()[i]);
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            String[] temp = new String[c.getColumnCount()];
+            for (i = 0; i < temp.length; i++) {
+                temp[i] = c.getString(i);
+                Log.d("TEST_TAG", "" + temp[i]);
+            }
+            result.add(temp);
+        }
 
-    public List<Question> getAllQuestionsList() {
-        List<Question> questionArrayList = new ArrayList<>();
+        return result;
+    }
+
+    public ArrayList<String> getAllCategoryList(int univId){
+        ArrayList<String> categoryArrayList = new ArrayList<>();
+
+        String selectCategoryQuery = "SELECT DISTINCT category FROM Questions " +
+                "WHERE univ_id= "+univId+";";
+
+        SQLiteDatabase dataBase = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor cursor = dataBase.rawQuery(selectCategoryQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String categoryText = cursor.getString(cursor.getColumnIndex("category"));
+                categoryArrayList.add(categoryText);
+            } while (cursor.moveToNext());
+        }
+        return categoryArrayList;
+    }
+
+    public ArrayList<Universe> getAllUniverseList() {
+        ArrayList<Universe> universeArrayList = new ArrayList<>();
+
+        String selectUniverseQuery = "SELECT * FROM Universes;";
+        SQLiteDatabase dataBase = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor cursor = dataBase.rawQuery(selectUniverseQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String univText = cursor.getString(cursor.getColumnIndex("name"));
+
+                int univId = cursor.getInt(cursor.getColumnIndex("univ_id"));
+
+                Universe universe = new Universe(univId, univText);
+                universeArrayList.add(universe);
+            } while (cursor.moveToNext());
+        }
+        return universeArrayList;
+    }
+
+    public ArrayList<Question> getAllQuestionsList() {
+        ArrayList<Question> questionArrayList = new ArrayList<>();
+
         String selectQueryQues = "SELECT  * FROM Questions " +
-                "WHERE level = "+ level + " and univ_id = " + univ_id + ";" ;//+ TABLE_QUESTION;
+                "WHERE category = '" + category + "' and univ_id = " + univ_id + ";";//+ TABLE_QUESTION;
+
         String selectQueryCh = "SELECT * FROM Answers, Questions " +
                 "WHERE Questions.ques_id = Answers.ques_id " +
-                "and level = "+ level + " and univ_id = " + univ_id + ";";
-        String selectQueryUniv = "SELECT * FROM Universes WHERE univ_id = " + univ_id + ";";
-        //String selectQueryAns = "SELECT answer FROM Answers WHERE correct = 1;";
+                "and category = '" + category + "' and univ_id = " + univ_id + ";";
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        @SuppressLint("Recycle") Cursor curs_ques = db.rawQuery(selectQueryQues, null);
-        @SuppressLint("Recycle") Cursor curs_ch = db.rawQuery(selectQueryCh, null);
-        @SuppressLint("Recycle") Cursor curs_univ = db.rawQuery(selectQueryUniv, null);
+//        String selectQueryUniv = "SELECT * FROM Universe WHERE univ_id = " + univ_id + ";";
+//        //String selectQueryAns = "SELECT answer FROM Answers WHERE correct = 1;";
+//        String selectTest = "SELECT name FROM sqlite_master WHERE type='table';";
+
+        //dataBase = this.getReadableDatabase();
+        SQLiteDatabase dataBase = this.getReadableDatabase();
+        Log.d("DB_TAG", "isOpen = " + dataBase.isOpen());
+
+
+        @SuppressLint("Recycle") Cursor curs_ques = dataBase.rawQuery(selectQueryQues, null);
+        @SuppressLint("Recycle") Cursor curs_ch = dataBase.rawQuery(selectQueryCh, null);
+//        @SuppressLint("Recycle") Cursor curs_univ = dataBase.rawQuery(selectQueryUniv, null);
         //@SuppressLint("Recycle") Cursor curs_ans = db.rawQuery(selectQueryAns, null);
 
-        // looping through all records and adding to the list
+        // looping through all records and adding to the listQuestions
         curs_ch.moveToFirst();
-        curs_univ.moveToFirst();
+//        curs_univ.moveToFirst();
         //curs_ans.moveToFirst();
 
 
@@ -123,21 +215,24 @@ public class DBHelper extends SQLiteOpenHelper {
                 //String univText = curs_univ.getString(curs_univ.getColumnIndex("name"));
                 //question.setUniverse(univText);
 
-                String questText= curs_ques.getString(curs_ques.getColumnIndex("name"));
+                String questText = curs_ques.getString(curs_ques.getColumnIndex("name"));
                 question.setQuestion(questText);
 
-                for (int i=0; i<4; i++) {
+                String quesId = curs_ch.getString(curs_ch.getColumnIndex("ques_id"));
+                while (true) {
+
+                    String quesId2 = curs_ch.getString(curs_ch.getColumnIndex("ques_id"));
+                    if (!quesId2.equals(quesId)) break;
 
                     String choiceText = curs_ch.getString(curs_ch.getColumnIndex("answer"));
-                    question.setChoice(i, choiceText);
-
+                    question.setChoice(choiceText);
                     int answerCorrect = curs_ch.getInt(curs_ch.getColumnIndex("correct"));
                     if (answerCorrect == 1) question.setAnswer(choiceText);
-
+                    if (curs_ch.isLast()) break;
                     curs_ch.moveToNext();
                 }
 
-                // adding to Questions list
+                // adding to Questions listQuestions
                 questionArrayList.add(question);
             } while (curs_ques.moveToNext());
             //Collections.shuffle(questionArrayList);
@@ -146,8 +241,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    //Создание аккаунта и статистики
     @Override
     public void onCreate(SQLiteDatabase db) {
+//        db.execSQL("CREATE TABLE Accounts ("
+//                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                + "name TEXT,"
+//                + "password TEXT" + ");");
+//
+//        db.execSQL("CREATE TABLE Score ("
+//                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                + "lotr TEXT,"
+//                + "password TEXT" + ");");
     }
 
     @Override
@@ -155,6 +260,17 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    public void putToCache() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(fContext);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong("base_time", lastModified);
+        editor.apply();
+    }
+
+    public void loadFromCache() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(fContext);
+        lastModified = settings.getLong("base_time", 0);
+    }
 
 
 }

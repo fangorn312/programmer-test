@@ -1,11 +1,15 @@
 package com.example.android.geektest2;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 // class Question to describe on question for test:
 // question itself, multiple choices to answer, and correct answer
 public class Question {
 
     private String question;
-    private String[] choice = new String[4];
+    private ArrayList<String> choice = new ArrayList<>();
     private String answer;
     private String universe;
 
@@ -13,15 +17,15 @@ public class Question {
 
     }
 
-    public Question(String question, String[] choices, String universe, String answer) {
-        this.question = question;
-        this.choice[0] = choices[0];
-        this.choice[1] = choices[1];
-        this.choice[2] = choices[2];
-        this.choice[3] = choices[3];
-        this.universe = universe;
-        this.answer = answer;
-    }
+//    public Question(String question, String[] choices, String universe, String answer) {
+//        this.question = question;
+//        this.choice[0] = choices[0];
+//        this.choice[1] = choices[1];
+//        this.choice[2] = choices[2];
+//        this.choice[3] = choices[3];
+//        this.universe = universe;
+//        this.answer = answer;
+//    }
 
 
 
@@ -30,7 +34,12 @@ public class Question {
     }
 
     public String getChoice(int i) {
-        return choice[i];
+        return choice.get(i);
+    }
+
+    public ArrayList<String> getChoiceArray() {
+        Collections.shuffle(choice);
+        return choice;
     }
 
     public String getAnswer() {
@@ -41,8 +50,8 @@ public class Question {
         this.answer = answer;
     }
 
-    public void setChoice(int i, String choice) {
-        this.choice[i] = choice;
+    public void setChoice(String _choice) {
+        choice.add(_choice);
     }
 
     public void setQuestion(String question) {

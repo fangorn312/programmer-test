@@ -14,43 +14,6 @@
         android:text="@string/question_text"
         android:textSize="25sp" />
 
-    <!--<Button
-        android:id="@+id/radioBtn1"
-        android:text="@string/choice_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:onClick="onClick" />
-
-    <Button
-        android:id="@+id/radioBtn2"
-        android:text="@string/choice_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:onClick="onClick" />
-
-    <Button
-        android:id="@+id/radioBtn3"
-        android:text="@string/choice_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:onClick="onClick" />
-
-    <Button
-        android:id="@+id/radioBtn4"
-        android:text="@string/choice_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:onClick="onClick" />-->
-
-
     <RadioGroup
         android:id="@+id/radioGroup_ques"
         android:layout_width="wrap_content"
@@ -58,29 +21,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp">
 
-        <RadioButton
-            android:id="@+id/radioBtn1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/choice_1" />
-
-        <RadioButton
-            android:id="@+id/radioBtn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/choice_2" />
-
-        <RadioButton
-            android:id="@+id/radioBtn3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/choice_3" />
-
-        <RadioButton
-            android:id="@+id/radioBtn4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/choice_4" />
 
     </RadioGroup>
 
@@ -90,31 +30,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/next_button_view" />
-
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/timer_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:textSize="50sp"
-            android:layout_centerHorizontal="true"/>
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_marginBottom="10dp"
-            android:maxHeight="35dip"
-            android:minHeight="35dip" />
-
-    </RelativeLayout>
 
 </LinearLayout>

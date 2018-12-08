@@ -1,11 +1,12 @@
 package com.example.android.geektest2;
 
-// This class contains a list of questions
+// This class contains a listQuestions of questions
 
 import android.content.Context;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 public class QuestionBank {
 
@@ -13,43 +14,53 @@ public class QuestionBank {
     //QuestionFragment mQuestionFragment = new QuestionFragment();
 
 
-    // declare list of Question objects
-    List<Question> list = new ArrayList<>();
+    // declare listQuestions of Question objects
+    ArrayList<Question> listQuestions = new ArrayList<>();
+    ArrayList<String[]> listDB = new ArrayList<>();
     DBHelper myDBHelper;
 
+    public ArrayList<String> getChoiceArrayOfQuestion(int questionNumber){
+        return listQuestions.get(questionNumber).getChoiceArray();
+    }
 
-    // method returns number of questions in list
+    // method returns number of questions in listQuestions
     public int getLength() {
-        return list.size();
+        return listQuestions.size();
     }
 
-    // method returns question from list based on list index
+    // method returns question from listQuestions based on listQuestions index
     public String getQuestion(int a) {
-        return list.get(a).getQuestion();
+        return listQuestions.get(a).getQuestion();
     }
 
-    public String getUniverse(int a) {return  list.get(a).getUniverse();}
+    public String getUniverse(int a) {return  listQuestions.get(a).getUniverse();}
 
-    // method return a single multiple choice item for question based on list index,
-    // based on number of multiple choice item in the list - 1, 2, 3 or 4
+    // method return a single multiple choice item for question based on listQuestions index,
+    // based on number of multiple choice item in the listQuestions - 1, 2, 3 or 4
     // as an argument
     public String getChoice(int index, int num) {
-        return list.get(index).getChoice(num - 1);
+        return listQuestions.get(index).getChoice(num - 1);
     }
 
-    //  method returns correct answer for the question based on list index
+    public ArrayList<Question> getListQuestions() {
+        return listQuestions;
+    }
+
+    //  method returns correct answer for the question based on listQuestions index
     public String getCorrectAnswer(int a) {
-        return list.get(a).getAnswer();
+        return listQuestions.get(a).getAnswer();
     }
 
 
 
-    public void initQuestions(Context context, int lvl, int univ) {
-
-
-        myDBHelper = new DBHelper(context, lvl, univ);
-        list = myDBHelper.getAllQuestionsList();//get questions/choices/answers from database
-
+    public void initQuestions(Context context, String category, int univ) throws IOException {
+        myDBHelper = new DBHelper(context, category, univ);
+        myDBHelper.createDataBase();
+        myDBHelper.openDataBase();
+        listDB = myDBHelper.getDbTableDetails();
+        listQuestions = myDBHelper.getAllQuestionsList();//get questions/choices/answers from database
+        Collections.shuffle(listQuestions);
+        myDBHelper.close();
     }
 
 }
