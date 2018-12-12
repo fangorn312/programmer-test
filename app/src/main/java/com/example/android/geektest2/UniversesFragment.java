@@ -22,7 +22,7 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
 
     ArrayList<Universe> mUniverses = new ArrayList<>();
     ArrayList<Button> universeButtons=new ArrayList<>();
-    DBHelper mDBHelper;
+    //DBHelper mDBHelper;
     LinearLayout containerUniverse;
 
     public static final String TAG_SELECTED_UNIV = "TAG_SELECTED_UNIV";
@@ -36,23 +36,11 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
 
         containerUniverse = view.findViewById(R.id.container_universe);
 
-        mDBHelper = new DBHelper(getActivity());
-        try {
-            mDBHelper.createDataBase();
-            mDBHelper.openDataBase();
-            mUniverses = mDBHelper.getAllUniverseList();
-            mDBHelper.close();
-
-        } catch (IOException e) {
-            TextView errorInfo = new TextView(getActivity());
-            errorInfo.setText("Ошибка базы данных");
-            errorInfo.setGravity(Gravity.CENTER);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            errorInfo.setLayoutParams(lp);
-            containerUniverse.addView(errorInfo);
-            e.printStackTrace();
-            return view;
-        }
+        //mDBHelper = new DBHelper(getActivity());
+        //mDBHelper.createDataBase();
+        //mDBHelper.openDataBase();
+        mUniverses = MainActivity.instance().mDBHelper.getAllUniverseList();
+        //mDBHelper.close();
 
         for(Universe u: mUniverses){
             Button btn = new Button(getActivity());
@@ -109,7 +97,7 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
         qi.UniverseId = univ_id;
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,  lvlFrag).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,  lvlFrag).commit();
         /*
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, new CategoryFragment(), LEVELS);

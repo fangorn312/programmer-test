@@ -2,8 +2,6 @@ package com.example.android.geektest2;
 
 // This class contains a listQuestions of questions
 
-import android.content.Context;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,8 +14,7 @@ public class QuestionBank {
 
     // declare listQuestions of Question objects
     ArrayList<Question> listQuestions = new ArrayList<>();
-    ArrayList<String[]> listDB = new ArrayList<>();
-    DBHelper myDBHelper;
+    //DBHelper myDBHelper;
 
     public ArrayList<String> getChoiceArrayOfQuestion(int questionNumber){
         return listQuestions.get(questionNumber).getChoiceArray();
@@ -30,7 +27,7 @@ public class QuestionBank {
 
     // method returns question from listQuestions based on listQuestions index
     public String getQuestion(int a) {
-        return listQuestions.get(a).getQuestion();
+        return listQuestions.get(a).getQuestionText();
     }
 
     public String getUniverse(int a) {return  listQuestions.get(a).getUniverse();}
@@ -51,16 +48,24 @@ public class QuestionBank {
         return listQuestions.get(a).getAnswer();
     }
 
+    public ArrayList<String> getCorrectAnswers(int a){
+        return listQuestions.get(a).getAnswers();
+    }
+
+    public int getQuestionType(int a){
+        return listQuestions.get(a).getQuestionType();
+    }
 
 
-    public void initQuestions(Context context, String category, int univ) throws IOException {
-        myDBHelper = new DBHelper(context, category, univ);
-        myDBHelper.createDataBase();
-        myDBHelper.openDataBase();
-        listDB = myDBHelper.getDbTableDetails();
-        listQuestions = myDBHelper.getAllQuestionsList();//get questions/choices/answers from database
+    public void initQuestions(String category, int univ) throws IOException {
+        //myDBHelper = new DBHelper(context, category, univ);
+        //myDBHelper.createDataBase();
+        //MainActivity.instance().mDBHelper.openDataBase();
+        //myDBHelper.openDataBase();
+        //listDB = MainActivity.instance().mDBHelper.getDbTableDetails();
+        listQuestions = MainActivity.instance().mDBHelper.getAllQuestionsList(category, univ);//get questions/choices/answers from database
         Collections.shuffle(listQuestions);
-        myDBHelper.close();
+        //myDBHelper.close();
     }
 
 }

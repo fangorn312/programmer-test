@@ -39,18 +39,25 @@ public class MainActivity extends FragmentActivity {
 //            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, loginFragment).commit();
 //        }
         changeView(VPIds.MENU);
-        if (mDBHelper == null) {
-            mDBHelper = new DBHelper(this);
-            try {
-                mDBHelper.createDataBase();
-//                mDBHelper.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
 
         instance = this;
 
+    }
+
+    @Override
+    protected void onResume() {
+        if (mDBHelper == null) {
+            mDBHelper = new DBHelper(this);
+        }
+        try {
+            mDBHelper.createDataBase();
+            mDBHelper.openDataBase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        super.onResume();
     }
 
     @Override
@@ -69,6 +76,12 @@ public class MainActivity extends FragmentActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        mDBHelper.close();
+        super.onStop();
     }
 
     public void changeView(String tag) {

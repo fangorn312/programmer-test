@@ -41,14 +41,9 @@ public class CategoryFragment extends Fragment implements OnBackPressedListener{
 
         containerCategories = view.findViewById(R.id.container_category);
 
-        try {
-            MainActivity.instance().mDBHelper.openDataBase();
-            mCategories = MainActivity.instance().mDBHelper.getAllCategoryList(QuizInfo.instance().UniverseId);
-            MainActivity.instance().mDBHelper.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //MainActivity.instance().mDBHelper.openDataBase();
+        mCategories = MainActivity.instance().mDBHelper.getAllCategoryList(QuizInfo.instance().UniverseId);
+        MainActivity.instance().mDBHelper.close();
 
         for(String s: mCategories){
             Button btn = new Button(getActivity());

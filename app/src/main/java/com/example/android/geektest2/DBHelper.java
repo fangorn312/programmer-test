@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -59,16 +58,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void createDataBase() throws IOException {
         boolean dbExist = checkDataBase();
-        if (dbExist) {
-            //ничего не делаем – файл базы данных уже есть
-        } else {
+        if (dbExist)
+            return;
             this.getReadableDatabase();
             try {
                 copyDataBase();
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
-        }
     }
 
     private boolean checkDataBase() {
@@ -108,7 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void openDataBase() throws SQLException, IOException {
         String path = DB_PATH + DB_NAME;
-        dataBase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+        if (dataBase==null) dataBase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
     }
 
     @Override
@@ -118,27 +115,27 @@ public class DBHelper extends SQLiteOpenHelper {
         super.close();
     }
 
-    public ArrayList<String[]> getDbTableDetails() {
-        //SQLiteDatabase db = this.getReadableDatabase();
-        dataBase = this.getReadableDatabase();
-        Cursor c = dataBase.rawQuery(
-                "SELECT name FROM sqlite_master WHERE type='table'", null);
-        ArrayList<String[]> result = new ArrayList<String[]>();
-        int i = 0;
-        result.add(c.getColumnNames());
-        for (i = 0; i < c.getColumnNames().length; i++)
-            Log.d("TAG_COLUMNS", "" + c.getColumnNames()[i]);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            String[] temp = new String[c.getColumnCount()];
-            for (i = 0; i < temp.length; i++) {
-                temp[i] = c.getString(i);
-                Log.d("TEST_TAG", "" + temp[i]);
-            }
-            result.add(temp);
-        }
-
-        return result;
-    }
+//    public ArrayList<String[]> getDbTableDetails() {
+//        //SQLiteDatabase db = this.getReadableDatabase();
+//        dataBase = this.getReadableDatabase();
+//        Cursor c = dataBase.rawQuery(
+//                "SELECT name FROM sqlite_master WHERE type='table'", null);
+//        ArrayList<String[]> result = new ArrayList<String[]>();
+//        int i = 0;
+//        result.add(c.getColumnNames());
+//        for (i = 0; i < c.getColumnNames().length; i++)
+//            Log.d("TAG_COLUMNS", "" + c.getColumnNames()[i]);
+//        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+//            String[] temp = new String[c.getColumnCount()];
+//            for (i = 0; i < temp.length; i++) {
+//                temp[i] = c.getString(i);
+//                Log.d("TEST_TAG", "" + temp[i]);
+//            }
+//            result.add(temp);
+//        }
+//
+//        return result;
+//    }
 
     public ArrayList<String> getAllCategoryList(int univId){
         ArrayList<String> categoryArrayList = new ArrayList<>();
@@ -178,7 +175,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return universeArrayList;
     }
 
-    public ArrayList<Question> getAllQuestionsList() {
+    public ArrayList<Question> getAllQuestionsList(String category, int univ_id) {
         ArrayList<Question> questionArrayList = new ArrayList<>();
 
         String selectQueryQues = "SELECT  * FROM Questions " +
@@ -216,7 +213,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 //question.setUniverse(univText);
 
                 String questText = curs_ques.getString(curs_ques.getColumnIndex("name"));
-                question.setQuestion(questText);
+                question.setQuestionText(questText);
 
                 String quesId = curs_ch.getString(curs_ch.getColumnIndex("ques_id"));
                 while (true) {
@@ -228,6 +225,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     question.setChoice(choiceText);
                     int answerCorrect = curs_ch.getInt(curs_ch.getColumnIndex("correct"));
                     if (answerCorrect == 1) question.setAnswer(choiceText);
+
+                    int questionType =  curs_ch.getInt(curs_ch.getColumnIndex("type"));
+                    question.setQuestionType(questionType);
                     if (curs_ch.isLast()) break;
                     curs_ch.moveToNext();
                 }

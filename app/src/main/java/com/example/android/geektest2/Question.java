@@ -2,23 +2,34 @@ package com.example.android.geektest2;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-// class Question to describe on question for test:
-// question itself, multiple choices to answer, and correct answer
+// class Question to describe on questionText for test:
+// questionText itself, multiple choices to answer, and correct answer
 public class Question {
 
-    private String question;
+    private String questionText;
     private ArrayList<String> choice = new ArrayList<>();
     private String answer;
+    private ArrayList<String> answers = new ArrayList<>();
     private String universe;
+    private int questionType;
+
+    public int getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(int questionType) {
+        this.questionType = questionType;
+    }
+
+
 
     public Question() {
 
     }
 
-//    public Question(String question, String[] choices, String universe, String answer) {
-//        this.question = question;
+//    public Question(String questionText, String[] choices, String universe, String answer) {
+//        this.questionText = questionText;
 //        this.choice[0] = choices[0];
 //        this.choice[1] = choices[1];
 //        this.choice[2] = choices[2];
@@ -29,8 +40,8 @@ public class Question {
 
 
 
-    public String getQuestion() {
-        return question;
+    public String getQuestionText() {
+        return questionText;
     }
 
     public String getChoice(int i) {
@@ -42,11 +53,16 @@ public class Question {
         return choice;
     }
 
+    public ArrayList<String> getAnswers() {
+        return answers;
+    }
+
     public String getAnswer() {
         return answer;
     }
 
     public void setAnswer(String answer) {
+        answers.add(answer);
         this.answer = answer;
     }
 
@@ -54,8 +70,8 @@ public class Question {
         choice.add(_choice);
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
     public String getUniverse() {
