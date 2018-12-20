@@ -1,21 +1,16 @@
 package com.example.android.geektest2;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class UniversesFragment extends Fragment implements OnBackPressedListener {
@@ -66,7 +61,7 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
             public void onClick(View view) {
                 for(Universe u: mUniverses){
                     if (view.getId()==u.getID()){
-                        onLevelsFragment(u.getID());
+                        goToCategoryFragment(u.getID());
                         break;
                     }
                 }
@@ -88,22 +83,17 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
         return view;
     }
 
-    private void onLevelsFragment(int univ_id){
+    private void goToCategoryFragment(int univ_id){
 
         //Смена фрагмента один на другой
+        MainActivity.instance().changeView(VPIds.CATEGORY);
 
-        CategoryFragment lvlFrag = new CategoryFragment();
-        QuizInfo qi = QuizInfo.instance();
-        qi.UniverseId = univ_id;
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,  lvlFrag).commit();
-        /*
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new CategoryFragment(), LEVELS);
-        ft.addToBackStack(null);
-        ft.commit();
-*/
+//        CategoryFragment categoryFrag = new CategoryFragment();
+        QuizInfo.instance().UniverseId = univ_id;
+//        qi.UniverseId = univ_id;
+//
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.fragment_container,  categoryFrag).commit();
     }
 
     @Override

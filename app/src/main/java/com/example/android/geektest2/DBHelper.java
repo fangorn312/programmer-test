@@ -140,15 +140,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<String> getAllCategoryList(int univId){
         ArrayList<String> categoryArrayList = new ArrayList<>();
 
-        String selectCategoryQuery = "SELECT DISTINCT category FROM Questions " +
-                "WHERE univ_id= "+univId+";";
+        String selectCategoryQuery = "SELECT DISTINCT c.Name FROM Category c, Universes u WHERE u.univ_id="+univId;
+//                "SELECT DISTINCT category FROM Questions " +
+//                "WHERE univ_id= "+univId+";";
 
         SQLiteDatabase dataBase = this.getReadableDatabase();
         @SuppressLint("Recycle") Cursor cursor = dataBase.rawQuery(selectCategoryQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                String categoryText = cursor.getString(cursor.getColumnIndex("category"));
+                String categoryText = cursor.getString(cursor.getColumnIndex("Name"));
                 categoryArrayList.add(categoryText);
             } while (cursor.moveToNext());
         }
@@ -221,13 +222,18 @@ public class DBHelper extends SQLiteOpenHelper {
                     String quesId2 = curs_ch.getString(curs_ch.getColumnIndex("ques_id"));
                     if (!quesId2.equals(quesId)) break;
 
+                    Integer order = curs_ch.getInt(curs_ch.getColumnIndex("order"));
                     String choiceText = curs_ch.getString(curs_ch.getColumnIndex("answer"));
-                    question.setChoice(choiceText);
+                    if (order!=0) question.setChoice("order:"+order+" "+choiceText);
+                    else question.setChoice(choiceText);
                     int answerCorrect = curs_ch.getInt(curs_ch.getColumnIndex("correct"));
                     if (answerCorrect == 1) question.setAnswer(choiceText);
 
                     int questionType =  curs_ch.getInt(curs_ch.getColumnIndex("type"));
                     question.setQuestionType(questionType);
+
+
+
                     if (curs_ch.isLast()) break;
                     curs_ch.moveToNext();
                 }

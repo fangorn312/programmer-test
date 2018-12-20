@@ -1,5 +1,6 @@
 package com.example.android.geektest2;
 
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -89,6 +90,7 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment neededFragment = null;
 
+
         switch (tag) {
             case VPIds.UNIVERSE:
                 neededFragment = new UniversesFragment();
@@ -111,7 +113,6 @@ public class MainActivity extends FragmentActivity {
             default:
                 break;
         }
-
         fragmentTransaction.replace(R.id.fragment_container, neededFragment, tag);
         fragmentTransaction.commitAllowingStateLoss();
     }
