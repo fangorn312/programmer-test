@@ -1,9 +1,11 @@
 package com.example.android.geektest2;
 
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
-import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 
 
@@ -29,7 +29,11 @@ public class CategoryFragment extends Fragment implements OnBackPressedListener{
         // Required empty public constructor
     }
 
-    ArrayList<String> mCategories=new ArrayList<>();
+    private class CategoryInfo{
+
+    }
+
+    ArrayList<Category> mCategories=new ArrayList<>();
     ArrayList<Button> categoryButtons = new ArrayList<>();
     LinearLayout containerCategories;
 
@@ -44,14 +48,18 @@ public class CategoryFragment extends Fragment implements OnBackPressedListener{
         //MainActivity.instance().mDBHelper.openDataBase();
         mCategories = MainActivity.instance().mDBHelper.getAllCategoryList(QuizInfo.instance().UniverseId);
         MainActivity.instance().mDBHelper.close();
-
-        for(String s: mCategories){
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(5,5,5,5);
+        for(Category c: mCategories){
             Button btn = new Button(getActivity());
-            btn.setText(s);
+            btn.setTextColor(Color.parseColor("#FFFFFF"));
+            btn.setBackgroundResource( R.drawable.buttonstyle);
+            btn.setText(c.getName());
             btn.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             btn.setLayoutParams(lp);
-            containerCategories.addView(btn);
+            containerCategories.addView(btn,layoutParams);
             categoryButtons.add(btn);
         }
 
@@ -60,6 +68,9 @@ public class CategoryFragment extends Fragment implements OnBackPressedListener{
             @Override
             public void onClick(View view) {
                 selectedChoice = b.getText().toString();
+                for (Category c : mCategories){
+                    if (selectedChoice.equals(c.getName())) QuizInfo.instance().CategoryId = c.getId();
+                }
                 goToNextFragment();
             }
         });
@@ -70,7 +81,7 @@ public class CategoryFragment extends Fragment implements OnBackPressedListener{
 
     private void goToNextFragment() {
 //        QuestionFragment quesFrag = new QuestionFragment();
-        QuizInfo.instance().Category=selectedChoice;
+        QuizInfo.instance().CategoryName =selectedChoice;
 
         MainActivity.instance().changeView(VPIds.QUESTION);
 //        FragmentManager fragmentManager = getFragmentManager();

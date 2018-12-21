@@ -9,10 +9,20 @@ public class Question {
 
     private String questionText;
     private ArrayList<String> choice = new ArrayList<>();
-    private String answer;
+    //private String answer;
     private ArrayList<String> answers = new ArrayList<>();
     private String universe;
     private int questionType;
+
+    public int getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(int languageId) {
+        this.languageId = languageId;
+    }
+
+    private int languageId;
 
     public int getQuestionType() {
         return questionType;
@@ -57,13 +67,9 @@ public class Question {
         return answers;
     }
 
-    public String getAnswer() {
-        return answer;
-    }
 
     public void setAnswer(String answer) {
         answers.add(answer);
-        this.answer = answer;
     }
 
     public void setChoice(String _choice) {

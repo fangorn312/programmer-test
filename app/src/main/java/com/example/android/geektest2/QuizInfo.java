@@ -13,14 +13,16 @@ public class QuizInfo {
     private QuizInfo(){
         UniverseName="";
         UniverseId=0;
-        Category="";
+        CategoryName ="";
         Score=0;
+        CategoryId=0;
         QuestionsCount=0;
     }
 
     public int UniverseId;
     public String UniverseName;
-    public String Category;
+    public String CategoryName;
+    public int CategoryId;
     public int Score;
     public int QuestionsCount;
 }

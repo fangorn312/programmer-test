@@ -13,7 +13,7 @@ public class QuestionBank {
 
 
     // declare listQuestions of Question objects
-    ArrayList<Question> listQuestions = new ArrayList<>();
+    private ArrayList<Question> listQuestions = new ArrayList<>();
     //DBHelper myDBHelper;
 
     public ArrayList<String> getChoiceArrayOfQuestion(int questionNumber){
@@ -44,9 +44,9 @@ public class QuestionBank {
     }
 
     //  method returns correct answer for the question based on listQuestions index
-    public String getCorrectAnswer(int a) {
-        return listQuestions.get(a).getAnswer();
-    }
+//    public String getCorrectAnswer(int a) {
+//        return listQuestions.get(a).getAnswer();
+//    }
 
     public ArrayList<String> getCorrectAnswers(int a){
         return listQuestions.get(a).getAnswers();
@@ -56,14 +56,18 @@ public class QuestionBank {
         return listQuestions.get(a).getQuestionType();
     }
 
+    public int getQuestionLanguageId(int a){
+        return listQuestions.get(a).getLanguageId();
+    }
 
-    public void initQuestions(String category, int univ) throws IOException {
+
+    public void initQuestions(int categoryId) throws IOException {
         //myDBHelper = new DBHelper(context, category, univ);
         //myDBHelper.createDataBase();
         //MainActivity.instance().mDBHelper.openDataBase();
         //myDBHelper.openDataBase();
         //listDB = MainActivity.instance().mDBHelper.getDbTableDetails();
-        listQuestions = MainActivity.instance().mDBHelper.getAllQuestionsList(category, univ);//get questions/choices/answers from database
+        listQuestions = MainActivity.instance().mDBHelper.getAllQuestionsList(categoryId);//get questions/choices/answers from database
         Collections.shuffle(listQuestions);
         //myDBHelper.close();
     }

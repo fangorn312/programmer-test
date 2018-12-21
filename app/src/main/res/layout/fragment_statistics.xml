@@ -6,7 +6,7 @@
     tools:context="com.example.android.geektest2.StatisticsFragment">
 
     <TextView
-        android:text="Статистика"
+        android:text="Настройки"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

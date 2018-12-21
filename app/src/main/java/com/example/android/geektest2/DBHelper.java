@@ -137,10 +137,10 @@ public class DBHelper extends SQLiteOpenHelper {
 //        return result;
 //    }
 
-    public ArrayList<String> getAllCategoryList(int univId){
-        ArrayList<String> categoryArrayList = new ArrayList<>();
+    public ArrayList<Category> getAllCategoryList(int univId){
+        ArrayList<Category> categoryArrayList = new ArrayList<>();
 
-        String selectCategoryQuery = "SELECT DISTINCT c.Name FROM Category c, Universes u WHERE u.univ_id="+univId;
+        String selectCategoryQuery = "SELECT DISTINCT * FROM Category WHERE UniverseId="+univId;
 //                "SELECT DISTINCT category FROM Questions " +
 //                "WHERE univ_id= "+univId+";";
 
@@ -150,7 +150,8 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 String categoryText = cursor.getString(cursor.getColumnIndex("Name"));
-                categoryArrayList.add(categoryText);
+                int categoryId = cursor.getInt(cursor.getColumnIndex("Id"));
+                categoryArrayList.add(new Category(categoryId,categoryText));
             } while (cursor.moveToNext());
         }
         return categoryArrayList;
@@ -176,15 +177,33 @@ public class DBHelper extends SQLiteOpenHelper {
         return universeArrayList;
     }
 
-    public ArrayList<Question> getAllQuestionsList(String category, int univ_id) {
+    public ArrayList<Language> getAllLanguages(){
+        String query = "SELECT * FROM Languages";
+        ArrayList<Language> languages = new ArrayList<>();
+
+        SQLiteDatabase dataBase = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor cursor = dataBase.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String Name = cursor.getString(cursor.getColumnIndex("Name"));
+
+                int Id = cursor.getInt(cursor.getColumnIndex("Id"));
+
+                languages.add(new Language(Id,Name));
+            } while (cursor.moveToNext());
+        }
+        return languages;
+
+    }
+
+    public ArrayList<Question> getAllQuestionsList(int category) {
         ArrayList<Question> questionArrayList = new ArrayList<>();
 
-        String selectQueryQues = "SELECT  * FROM Questions " +
-                "WHERE category = '" + category + "' and univ_id = " + univ_id + ";";//+ TABLE_QUESTION;
 
-        String selectQueryCh = "SELECT * FROM Answers, Questions " +
-                "WHERE Questions.ques_id = Answers.ques_id " +
-                "and category = '" + category + "' and univ_id = " + univ_id + ";";
+        String selectQueryQues = "SELECT * FROM Questions q WHERE " + category + "= q.categoryId;";
+        String selectQueryCh = "SELECT * FROM Answers a, Questions q " +
+                "WHERE q.ques_id = a.ques_id and q.categoryId = "+category+";";
 
 //        String selectQueryUniv = "SELECT * FROM Universe WHERE univ_id = " + univ_id + ";";
 //        //String selectQueryAns = "SELECT answer FROM Answers WHERE correct = 1;";
@@ -214,8 +233,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 //question.setUniverse(univText);
 
                 String questText = curs_ques.getString(curs_ques.getColumnIndex("name"));
+                int languageId = curs_ques.getInt(curs_ques.getColumnIndex("languageId"));
                 question.setQuestionText(questText);
-
+                question.setLanguageId(languageId);
+                int questionType =  curs_ques.getInt(curs_ques.getColumnIndex("type"));
+                question.setQuestionType(questionType);
                 String quesId = curs_ch.getString(curs_ch.getColumnIndex("ques_id"));
                 while (true) {
 
@@ -229,17 +251,12 @@ public class DBHelper extends SQLiteOpenHelper {
                     int answerCorrect = curs_ch.getInt(curs_ch.getColumnIndex("correct"));
                     if (answerCorrect == 1) question.setAnswer(choiceText);
 
-                    int questionType =  curs_ch.getInt(curs_ch.getColumnIndex("type"));
-                    question.setQuestionType(questionType);
-
-
-
                     if (curs_ch.isLast()) break;
                     curs_ch.moveToNext();
                 }
-
-                // adding to Questions listQuestions
                 questionArrayList.add(question);
+                // adding to Questions listQuestions
+
             } while (curs_ques.moveToNext());
             //Collections.shuffle(questionArrayList);
         }

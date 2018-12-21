@@ -4,7 +4,6 @@ package com.example.android.geektest2;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,7 @@ public class ResultFragment extends Fragment implements View.OnClickListener{
         universeInfo.setText(QuizInfo.instance().UniverseName);
 
         TextView levelInfo = view.findViewById(R.id.res_level_text);
-        levelInfo.setText(QuizInfo.instance().Category);
+        levelInfo.setText(QuizInfo.instance().CategoryName);
 
         TextView quantityInfo = view.findViewById(R.id.res_total_text);
         quantityInfo.setText(String.valueOf(QuizInfo.instance().QuestionsCount));

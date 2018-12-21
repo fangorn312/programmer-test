@@ -1,8 +1,11 @@
 package com.example.android.geektest2;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +19,18 @@ import java.util.ArrayList;
 public class UniversesFragment extends Fragment implements OnBackPressedListener {
 
     ArrayList<Universe> mUniverses = new ArrayList<>();
-    ArrayList<Button> universeButtons=new ArrayList<>();
+    ArrayList<Button> universeButtons = new ArrayList<>();
     //DBHelper mDBHelper;
     LinearLayout containerUniverse;
 
     public static final String TAG_SELECTED_UNIV = "TAG_SELECTED_UNIV";
 
-    private static final String TAG="UniversesFragment";
+    private static final String TAG = "UniversesFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_universes, container, false);
+        View view = inflater.inflate(R.layout.fragment_universes, container, false);
 
         containerUniverse = view.findViewById(R.id.container_universe);
 
@@ -36,16 +39,22 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
         //mDBHelper.openDataBase();
         mUniverses = MainActivity.instance().mDBHelper.getAllUniverseList();
         //mDBHelper.close();
-
-        for(Universe u: mUniverses){
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(5,5,5,5);
+        for (Universe u : mUniverses) {
             Button btn = new Button(getActivity());
+            btn.setTextColor(Color.parseColor("#FFFFFF"));
+            btn.setBackgroundResource( R.drawable.buttonstyle);
+
+
             btn.setText(u.getUniverse());
             btn.setId(u.getID());
             btn.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             btn.setLayoutParams(lp);
             universeButtons.add(btn);
-            containerUniverse.addView(btn);
+            containerUniverse.addView(btn, layoutParams);
         }
 
 //        Button btnLOTR = (Button) view.findViewById(R.id.lotr_btn);
@@ -59,16 +68,18 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
 
             @Override
             public void onClick(View view) {
-                for(Universe u: mUniverses){
-                    if (view.getId()==u.getID()){
-                        goToCategoryFragment(u.getID());
+                for (Universe u : mUniverses) {
+                    if (view.getId() == u.getID()) {
+                        QuizInfo.instance().UniverseName = u.getUniverse();
+                        QuizInfo.instance().UniverseId = u.getID();
+                        goToCategoryFragment();
                         break;
                     }
                 }
             }
         };
 
-        for(Button u: universeButtons){
+        for (Button u : universeButtons) {
             u.setOnClickListener(onClickListener);
         }
 
@@ -83,13 +94,12 @@ public class UniversesFragment extends Fragment implements OnBackPressedListener
         return view;
     }
 
-    private void goToCategoryFragment(int univ_id){
+    private void goToCategoryFragment() {
 
         //Смена фрагмента один на другой
         MainActivity.instance().changeView(VPIds.CATEGORY);
 
 //        CategoryFragment categoryFrag = new CategoryFragment();
-        QuizInfo.instance().UniverseId = univ_id;
 //        qi.UniverseId = univ_id;
 //
 //        FragmentManager fragmentManager = getFragmentManager();
