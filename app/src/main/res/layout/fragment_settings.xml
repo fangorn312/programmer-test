@@ -3,33 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.android.programmertest.MenuFragment">
-
+    tools:context="com.example.android.programmertest.SettingsFragment">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="Programming Skills Test"
+        android:text="Настройки"
         android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/select_univ_btn_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/buttonstyle"
-        android:text="Выбор раздела"
-        android:textColor="#FFFFFF" />
 
     <Button
-        android:id="@+id/stats_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/update_btn"
+        android:text="Обновить базу данных"
+        android:textColor="#FFFFFF"
         android:layout_margin="5dp"
         android:background="@drawable/buttonstyle"
-        android:text="Настройки"
-        android:textColor="#FFFFFF" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/about_btn"
+        android:text="О приложении"
+        android:textColor="#FFFFFF"
+        android:layout_margin="5dp"
+        android:background="@drawable/buttonstyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

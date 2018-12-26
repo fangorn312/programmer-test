@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AboutAppFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="О приложении"
+        android:textSize="25sp" />
+
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Разработчик:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/info_developer"
+                android:text="Жээмбаев Уларбек ЕПИ 1-16"
+                android:layout_margin="20dp"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Версия базы данных:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/info_database"
+                android:textSize="15sp"
+                android:layout_margin="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Версия приложения:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/info_appVersion"
+                android:text="1.0"
+                android:textSize="15sp"
+                android:layout_margin="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+
+</LinearLayout>

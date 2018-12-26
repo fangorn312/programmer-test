@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/fragment_container"
-    tools:context="com.example.android.geektest2.MainActivity">
+    tools:context="com.example.android.programmertest.MainActivity">
 
 
 </LinearLayout>

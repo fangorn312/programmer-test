@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.geektest2.ResultFragment">
+    tools:context="com.example.android.programmertest.ResultFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,25 +12,25 @@
 
         android:textSize="30sp" />
 
-    <TableRow>
+    <!--<TableRow>-->
 
-        <TextView
-            android:id="@+id/res_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_weight="0.5"
-            android:text="Name:"
-            android:textSize="25sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/res_name"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="15dp"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:text="Name:"-->
+            <!--android:textSize="25sp" />-->
 
-        <TextView
-            android:id="@+id/res_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_weight="1.5"
-            android:textSize="15sp" />
-    </TableRow>
+        <!--<TextView-->
+            <!--android:id="@+id/res_name_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="15dp"-->
+            <!--android:layout_weight="1.5"-->
+            <!--android:textSize="15sp" />-->
+    <!--</TableRow>-->
 
     <TableRow>
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_weight="0.5"
-            android:text="Universe:"
+            android:text="Раздел:"
             android:textSize="25sp" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_weight="0.5"
-            android:text="Level:"
+            android:text="Подраздел:"
             android:textSize="25sp" />
 
         <TextView
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_weight="0.5"
-            android:text="Total:"
+            android:text="Всего:"
             android:textSize="25sp" />
 
         <TextView
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_weight="0.5"
-            android:text="Correct:"
+            android:text="Правильно:"
             android:textSize="25sp" />
 
         <TextView

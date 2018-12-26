@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.example.android.geektest2.LoginFragment">
+    tools:context="com.example.android.programmertest.LoginFragment">
 
     <TextView
         android:layout_width="wrap_content"
