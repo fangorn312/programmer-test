@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -67,8 +67,8 @@ public class SectionFragment extends Fragment implements OnBackPressedListener {
             public void onClick(View view) {
                 for (Section u : mSections) {
                     if (view.getId() == u.getId()) {
-                        QuizInfo.instance().SectionName = u.getUniverse();
-                        QuizInfo.instance().SectionId = u.getId();
+                        MainActivity.instance().SectionName = u.getUniverse();
+                        MainActivity.instance().SectionId = u.getId();
                         goToCategoryFragment();
                         break;
                     }

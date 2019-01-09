@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -28,25 +29,32 @@ public class DBHelper extends SQLiteOpenHelper {
     private SQLiteDatabase dataBase;
     private final Context fContext;
 
+    public String getDbPath() {
+        return DB_PATH;
+    }
+
+    public static String getDbName() {
+        return DB_NAME;
+    }
 
     //private long lastModified;
-    public static final int DB_VERSION = 10;
+    private static final int DB_VERSION = 1;
     //public static final boolean isChanged = false;
 
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         fContext = context;
         Log.d("DBHelper", context.getFilesDir().getAbsolutePath());
         Log.d("DBHelper", context.getFilesDir().getPath());
         Log.d("DBHelper", context.getFilesDir().getName());
-        DB_PATH = "data/data/"+context.getPackageName()+"/databases/";
+        DB_PATH = "data/data/" + context.getPackageName() + "/databases/";
         //loadFromCache();
 
     }
 
 
-    public void createDataBase() throws IOException {
+    public void createDataBase() {
         boolean dbExist = checkDataBase();
         if (dbExist)
             return;
@@ -54,7 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             copyDataBase();
         } catch (IOException e) {
-            throw new Error("Error copying database");
+            e.printStackTrace();
         }
     }
 
@@ -67,24 +75,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public String dbLastModified(){
-        try {
-            String myPath = DB_PATH + DB_NAME;
-            File dbFile = new File(myPath);
-            if (!dbFile.exists()) return "База отсутствует";
-            long lm = dbFile.lastModified();
-            String pattern = "dd-MM-yyyy HH:mm:ss";
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-            return simpleDateFormat.format(new Date(lm));
-//            lastModified = dbFile.lastModified();
-        } catch (SQLiteException e) {
-            Log.d("TEST_TAG", "База отсутствует");
-            e.printStackTrace();
-            return "База отсутствует";
-            //файл базы данных отсутствует
-        }
-    }
 
     private boolean checkDataBase() {
         boolean checkDB = false;
@@ -104,7 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private void copyDataBase() throws IOException {
         InputStream input = fContext.getAssets().open(DB_NAME);
         String outFileName = DB_PATH + DB_NAME;
-        OutputStream output = new FileOutputStream(outFileName);
+        OutputStream output = new FileOutputStream(outFileName, false);
         byte[] buffer = new byte[4096];
         int length;
         while ((length = input.read(buffer)) > 0) {
@@ -115,10 +105,25 @@ public class DBHelper extends SQLiteOpenHelper {
         input.close();
     }
 
-    public void openDataBase() throws SQLException, IOException {
+    public void copyDataBaseFromDownload()  {
+        try {
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + DB_NAME);
+            if (file.exists())
+                file.renameTo(new File(DB_PATH + DB_NAME));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openDataBase() {
         String path = DB_PATH + DB_NAME;
         if (dataBase == null)
             dataBase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+    }
+
+    public void openDataBaseForced() throws SQLException {
+        String path = DB_PATH + DB_NAME;
+        dataBase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
     }
 
     @Override
@@ -128,34 +133,11 @@ public class DBHelper extends SQLiteOpenHelper {
         super.close();
     }
 
-//    public ArrayList<String[]> getDbTableDetails() {
-//        //SQLiteDatabase db = this.getReadableDatabase();
-//        dataBase = this.getReadableDatabase();
-//        Cursor c = dataBase.rawQuery(
-//                "SELECT name FROM sqlite_master WHERE type='table'", null);
-//        ArrayList<String[]> result = new ArrayList<String[]>();
-//        int i = 0;
-//        result.add(c.getColumnNames());
-//        for (i = 0; i < c.getColumnNames().length; i++)
-//            Log.d("TAG_COLUMNS", "" + c.getColumnNames()[i]);
-//        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-//            String[] temp = new String[c.getColumnCount()];
-//            for (i = 0; i < temp.length; i++) {
-//                temp[i] = c.getString(i);
-//                Log.d("TEST_TAG", "" + temp[i]);
-//            }
-//            result.add(temp);
-//        }
-//
-//        return result;
-//    }
 
     public ArrayList<Subsection> getAllSubsectionsList(int sectionId) {
         ArrayList<Subsection> subsectionArrayList = new ArrayList<>();
 
         String query = "SELECT DISTINCT * FROM Subsection WHERE SectionId=" + sectionId;
-//                "SELECT DISTINCT category FROM Questions " +
-//                "WHERE univ_id= "+univId+";";
 
         SQLiteDatabase dataBase = this.getReadableDatabase();
         @SuppressLint("Recycle") Cursor cursor = dataBase.rawQuery(query, null);
@@ -229,21 +211,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
         @SuppressLint("Recycle") Cursor cursor_question = dataBase.rawQuery(selectQueryQues, null);
         @SuppressLint("Recycle") Cursor cursor_answer = dataBase.rawQuery(selectQueryCh, null);
-//        @SuppressLint("Recycle") Cursor curs_univ = dataBase.rawQuery(selectQueryUniv, null);
-        //@SuppressLint("Recycle") Cursor curs_ans = db.rawQuery(selectQueryAns, null);
 
-        // looping through all records and adding to the listQuestions
         cursor_answer.moveToFirst();
-//        curs_univ.moveToFirst();
-        //curs_ans.moveToFirst();
-
 
         if (cursor_question.moveToFirst()) {
             do {
                 Question question = new Question();
-
-                //String univText = curs_univ.getString(curs_univ.getColumnIndex("name"));
-                //question.setUniverse(univText);
 
                 String questText = cursor_question.getString(cursor_question.getColumnIndex("Name"));
                 int languageId = cursor_question.getInt(cursor_question.getColumnIndex("LanguageId"));
@@ -280,25 +253,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    //Создание аккаунта и статистики
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-//        createDataBaseForced();
-//        db.execSQL("CREATE TABLE Accounts ("
-//                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-//                + "name TEXT,"
-//                + "password TEXT" + ");");
-//
-//        db.execSQL("CREATE TABLE Score ("
-//                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-//                + "lotr TEXT,"
-//                + "password TEXT" + ");");
+        //Not require. The database is downloaded from the server
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        createDataBaseForced();
+        //Not require. The database is downloaded from the server
     }
 
 

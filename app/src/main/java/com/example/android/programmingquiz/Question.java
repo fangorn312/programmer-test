@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 import java.util.ArrayList;
 import java.util.Collections;

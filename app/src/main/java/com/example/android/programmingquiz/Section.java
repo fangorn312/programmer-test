@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 /**
  * Created by Fangorn on 22.12.2017.

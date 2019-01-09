@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 public class Subsection {
     private int Id;

@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

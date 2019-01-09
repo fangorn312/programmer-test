@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 
 import android.annotation.SuppressLint;
@@ -37,16 +37,16 @@ public class ResultFragment extends Fragment implements View.OnClickListener{
         //nameInfo.setText("");
 
         TextView universeInfo = view.findViewById(R.id.res_univ_text);
-        universeInfo.setText(QuizInfo.instance().SectionName);
+        universeInfo.setText(MainActivity.instance().SectionName);
 
         TextView levelInfo = view.findViewById(R.id.res_level_text);
-        levelInfo.setText(QuizInfo.instance().SubsectionName);
+        levelInfo.setText(MainActivity.instance().SubsectionName);
 
         TextView quantityInfo = view.findViewById(R.id.res_total_text);
-        quantityInfo.setText(String.valueOf(QuizInfo.instance().QuestionsCount));
+        quantityInfo.setText(String.valueOf(MainActivity.instance().QuestionsCount));
 
         TextView correctInfo = view.findViewById(R.id.res_correct_text);
-        correctInfo.setText(String.valueOf(QuizInfo.instance().Score));
+        correctInfo.setText(String.valueOf(MainActivity.instance().Score));
 
         Button okButton = view.findViewById(R.id.res_ok_btn);
         okButton.setOnClickListener(this);

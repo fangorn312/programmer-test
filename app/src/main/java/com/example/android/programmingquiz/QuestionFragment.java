@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 
 import android.annotation.SuppressLint;
@@ -24,11 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.protectsoft.webviewcode.Codeview;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import io.github.kbiakov.codeview.CodeView;
 
 
 /**
@@ -39,18 +40,11 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
     public static final int TYPE_RADIO = 1;
     public static final int TYPE_CHECKBOX = 2;
     public static final int TYPE_INPUT = 3;
-    public static final int TYPE_REPLACE = 4;
+    public static final int TYPE_MOVE = 4;
 
     public QuestionFragment() {
         // Required empty public constructor
     }
-
-    //Tag for Bundle
-    public static final String TAG_SCORE = "TAG_SCORE";
-    public static final String TAG_QUANTITY = "TAG_QUANTITY";
-    public static final String TAG_UNIVERSE = "TAG_UNIVERSE";
-    public static final String TAG_CATEGORY = "TAG_CATEGORY";
-    //values from Bundle
 
     private QuestionBank mQuestionLibrary = new QuestionBank();
     private TextView mQuestionText;
@@ -72,8 +66,8 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
     LinearLayout ContainerCheckBoxes;
     EditText mInputAnswer;
     DragLinearLayout mDragLinearLayout;
-    //CodeView mCodeView;
     WebView mWebView;
+    CodeView mCodeView;
     String codeLanguage;
     ArrayList<Language> mLanguages;
 
@@ -92,15 +86,11 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
         ContainerCheckBoxes = view.findViewById(R.id.container_radio_checkbox);
         mInputAnswer = view.findViewById(R.id.answer_editText);
         mDragLinearLayout = view.findViewById(R.id.dragLinear_layout);
-        mWebView = view.findViewById(R.id.web_view);
-        //mCodeView = view.findViewById(R.id.code_view);
+//        mWebView = view.findViewById(R.id.web_view);
+        mCodeView = view.findViewById(R.id.code_view);
 
         mQuestionText = view.findViewById(R.id.question_text);
-        try {
-            mQuestionLibrary.initQuestions(QuizInfo.instance().SubsectionId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mQuestionLibrary.initQuestions(MainActivity.instance().SubsectionId);
 
 
         submit = view.findViewById(R.id.next_ques_btn);
@@ -120,13 +110,8 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                         for (String s : selected) {
                             if (mAnswers.contains(s)) correctCount++;
                         }
-                        if (mAnswers.size() == correctCount && mAnswers.size() == selected.size()) {
-                            mScore++;
-                            Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
-                        } else
-                            Toast.makeText(getActivity(), "Wrong!", Toast.LENGTH_SHORT).show();
+                        toastMessage(mAnswers.size() == correctCount && mAnswers.size() == selected.size());
 
-                        updateQuestion();
                     }
                 } else if (mQuestionType == TYPE_RADIO) {
                     int id = mRadioGroup.getCheckedRadioButtonId();
@@ -137,14 +122,7 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                         RadioButton btn = (RadioButton) mRadioGroup.getChildAt(radioId);
                         selectedChoice = (String) btn.getText();
 
-                        if (selectedChoice.equals(mAnswers.get(0))) {
-                            mScore++;
-                            Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
-                        } else
-                            Toast.makeText(getActivity(), "Wrong!", Toast.LENGTH_SHORT).show();
-
-                        updateQuestion();
-
+                        toastMessage(selectedChoice.equals(mAnswers.get(0)));
 
                     }
                 } else if (mQuestionType == TYPE_INPUT) {
@@ -152,23 +130,10 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                     String answer = mInputAnswer.getText().toString();
                     if (answer.isEmpty()) return;
 
-                    if (answer.trim().equals(mAnswers.get(0))) {
-                        mScore++;
-                        Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(getActivity(), "Wrong!", Toast.LENGTH_SHORT).show();
+                    toastMessage(answer.trim().equals(mAnswers.get(0)));
 
                     hideKeyboard();
-//                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-//                    if (imm != null) {
-//                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-//                    }
-//                    InputMethodManager imm = (InputMethodManager) getActivity()
-//                            .getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(getActivity().getWindow()
-//                            .getCurrentFocus().getWindowToken(), 0);
-                    updateQuestion();
-                } else if (mQuestionType == TYPE_REPLACE) {
+                } else if (mQuestionType == TYPE_MOVE) {
                     Collections.sort(mAnswerOrder, String.CASE_INSENSITIVE_ORDER);
                     int correctCount = 0;
                     for (int i = 0; i < mDragButtons.size(); i++) {
@@ -180,16 +145,11 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                             correctCount++;
                         }
                     }
-                    if (correctCount == mAnswerOrder.size()) {
-                        mScore++;
-                        Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(getActivity(), "Wrong!", Toast.LENGTH_SHORT).show();
-                    updateQuestion();
+                    toastMessage(correctCount == mAnswerOrder.size());
+
                 }
 
-
-                //Если выбран хоть 1 RadioButton
+                updateQuestion();
 
             }
         });
@@ -199,6 +159,13 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
         return view;
     }
 
+    private void toastMessage(boolean condition){
+        if (condition) {
+            mScore++;
+            Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getActivity(), "Wrong!", Toast.LENGTH_SHORT).show();
+    }
 
     private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
@@ -251,12 +218,13 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                 catch (ArrayIndexOutOfBoundsException e){
                     e.printStackTrace();
                 }
+                mCodeView.setCode(code, findLanguageById(languageId));
 //                mQuestionText.setVisibility(View.GONE);
-                Codeview.with(getActivity())
-                        .withCode(code)
-                        .setAutoWrap(true)
-                        .setLang(findLanguageById(languageId))
-                        .into(mWebView);
+//                Codeview.with(getActivity())
+//                        .withCode(code)
+//                        .setAutoWrap(true)
+//                        .setLang(findLanguageById(languageId))
+//                        .into(mWebView);
 //                mCodeView.setCode(mQuestionLibrary.getQuestion(mQuestionNumber), findLanguageById(languageId));
             } else {
                 mWebView.setVisibility(View.GONE);
@@ -301,7 +269,7 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                 ContainerCheckBoxes.setVisibility(View.GONE);
                 int maxLengthOfEditText = mAnswers.get(0).length() + 2;
                 mInputAnswer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLengthOfEditText)});
-            } else if (mQuestionType == TYPE_REPLACE) {
+            } else if (mQuestionType == TYPE_MOVE) {
                 mRadioGroup.setVisibility(View.GONE);
                 mInputAnswer.setVisibility(View.GONE);
                 ContainerCheckBoxes.setVisibility(View.GONE);
@@ -329,8 +297,6 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
                     // the child will act as its own drag handle
 
                 }
-            } else if (mQuestionType == 5) {
-
             }
 
             //mUniverse = mQuestionLibrary.getUniverse(mQuestionNumber);
@@ -347,8 +313,8 @@ public class QuestionFragment extends Fragment implements OnBackPressedListener 
     }
 
     private void goToNextFragment() {
-        QuizInfo.instance().QuestionsCount = mQuestionLibrary.getLength();
-        QuizInfo.instance().Score = mScore;
+        MainActivity.instance().Score = mScore;
+        MainActivity.instance().QuestionsCount = mQuestionLibrary.getLength();
         MainActivity.instance().changeView(IFragments.RESULT);
     }
 

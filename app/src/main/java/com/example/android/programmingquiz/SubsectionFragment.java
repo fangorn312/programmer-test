@@ -1,4 +1,4 @@
-package com.example.android.programmertest;
+package com.example.android.programmingquiz;
 
 
 import android.graphics.Color;
@@ -44,8 +44,8 @@ public class SubsectionFragment extends Fragment implements OnBackPressedListene
         containerCategories = view.findViewById(R.id.container_category);
 
         //MainActivity.instance().mDBHelper.openDataBase();
-        mCategories = MainActivity.instance().mDBHelper.getAllSubsectionsList(QuizInfo.instance().SectionId);
-        MainActivity.instance().mDBHelper.close();
+        mCategories = MainActivity.instance().mDBHelper.getAllSubsectionsList(MainActivity.instance().SectionId);
+        //MainActivity.instance().mDBHelper.close();
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(5,5,5,5);
@@ -67,7 +67,7 @@ public class SubsectionFragment extends Fragment implements OnBackPressedListene
             public void onClick(View view) {
                 selectedChoice = b.getText().toString();
                 for (Subsection c : mCategories){
-                    if (selectedChoice.equals(c.getName())) QuizInfo.instance().SubsectionId = c.getId();
+                    if (selectedChoice.equals(c.getName())) MainActivity.instance().SubsectionId = c.getId();
                 }
                 goToNextFragment();
             }
@@ -79,7 +79,7 @@ public class SubsectionFragment extends Fragment implements OnBackPressedListene
 
     private void goToNextFragment() {
 //        QuestionFragment quesFrag = new QuestionFragment();
-        QuizInfo.instance().SubsectionName =selectedChoice;
+        MainActivity.instance().SubsectionName =selectedChoice;
 
         MainActivity.instance().changeView(IFragments.QUESTION);
 //        FragmentManager fragmentManager = getFragmentManager();
